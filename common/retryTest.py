@@ -7,48 +7,6 @@ import unittest
 
 
 def retry(target=None, max_n=1, func_prefix="test"):
-    """
-    一个装饰器，用于unittest执行测试用例出现失败后，自动重试执行
-
-# example_1: test_001默认重试1次
-class ClassA(unittest.TestCase):
-    @retry
-    def test_001(self):
-        raise AttributeError
-
-
-# example_2: max_n=2,test_001重试2次
-class ClassB(unittest.TestCase):
-    @retry(max_n=2)
-    def test_001(self):
-        raise AttributeError
-
-
-# example_3: test_001重试3次; test_002重试3次
-@retry(max_n=3)
-class ClassC(unittest.TestCase):
-    def test_001(self):
-        raise AttributeError
-
-    def test_002(self):
-        raise AttributeError
-
-
-# example_4: test_102重试2次, test_001不参与重试机制
-@retry(max_n=2, func_prefix="test_1")
-class ClassD(unittest.TestCase):
-    def test_001(self):
-        raise AttributeError
-
-    def test_102(self):
-        raise AttributeError
-
-
-    :param target: 被装饰的对象，可以是class, function
-    :param max_n: 重试次数，没有包含必须有的第一次执行
-    :param func_prefix: 当装饰class时，可以用于标记哪些测试方法会被自动装饰
-    :return: wrapped class 或 wrapped function
-    """
 
     def decorator(func_or_cls):
         if inspect.isfunction(func_or_cls):
@@ -90,44 +48,6 @@ class ClassD(unittest.TestCase):
 
 
 class Retry(object):
-    """
-    类装饰器, 功能与Retry一样
-
-
-# example_1: test_001默认重试1次
-class ClassA(unittest.TestCase):
-    @Retry
-    def test_001(self):
-        raise AttributeError
-
-
-# example_2: max_n=2,test_001重试2次
-class ClassB(unittest.TestCase):
-    @Retry(max_n=2)
-    def test_001(self):
-        raise AttributeError
-
-
-# example_3: test_001重试3次; test_002重试3次
-@Retry(max_n=3)
-class ClassC(unittest.TestCase):
-    def test_001(self):
-        raise AttributeError
-
-    def test_002(self):
-        raise AttributeError
-
-
-# example_4: test_102重试2次, test_001不参与重试机制
-@Retry(max_n=2, func_prefix="test_1")
-class ClassD(unittest.TestCase):
-    def test_001(self):
-        raise AttributeError
-
-    def test_102(self):
-        raise AttributeError
-
-    """
 
     def __new__(cls, func_or_cls=None, max_n=1, func_prefix="test"):
         self = object.__new__(cls)
