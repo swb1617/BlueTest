@@ -32,7 +32,7 @@ class Tool:
         x1 = x2 = width * 0.5
         y1, y2 = height * 0.35, height * 0.7
         time.sleep(2)
-        self.driver.swipe(x1, y1, x2, y2, 1000)
+        self.driver.swipe(x1, y1, x2, y2, 1200)
 
     def SwipeFriendLeft(self):  # 定义下滑动方法
         size = self.driver.get_window_size()
