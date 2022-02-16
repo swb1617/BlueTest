@@ -1,15 +1,13 @@
 import time
 import unittest
-from appium import webdriver
-from selenium.webdriver.common.by import By
 
-from common.retryTest import retry
+from appium import webdriver
 
 from common.tool import Tool
-from config import desired_caps, max_number
+from config import desired_caps
+from element.button import Tap
 from element.elementData import Data
 from element.elementDevice import Device
-from element.button import Tap
 from element.elementMenu import Menu
 
 
@@ -28,69 +26,95 @@ class TestDevice(unittest.TestCase):
         Tool.judge_app_state(cls)
 
     def DataUpload(self):
-        global i,j
-        i = 0
-        j = 0
+        global detailsNetworkErrorCount, ossUploadErrorCount, uploadCount, blueToothErrorCount
+        detailsNetworkErrorCount = 0
+        ossUploadErrorCount = 0
+        uploadCount = 0
+        blueToothErrorCount = 0
+        timeNumber = 15
         while True:
             try:
                 if Device.GetDeviceDataManagementData1Info(self):
-                    print('数据已上传，准备删除数据')
+                    # print('数据已上传，准备删除数据')
                     Device.GetDeviceDataManagementData1Info(self).click()
             except:
-                print("数据未上传，准备上传数据")
+                # print("数据未上传，准备上传数据")
                 Device.GetDeviceDataManagementData1(self).click()
-                time.sleep(25)
+                time.sleep(timeNumber)
                 try:
                     if Device.GetDeviceDataManagementData1Info(self):
-                        print('数据已上传，准备删除数据')
+                        # print('数据已上传，准备删除数据')
                         Device.GetDeviceDataManagementData1Info(self).click()
                 except:
                     if Device.GetDeviceDataManagementData1(self):
-                        j = j + 1
-                        print("上传失败 " + str(j) + " 次")
+                        Device.GetDeviceDataManagementData1(self).click()
+                        # print("Device.GetDeviceDataManagementData1(self).click()")
+                    if Device.GetDeviceDataUpError(self).text == "同步失败，是否重新同步":
+                        print("message is " + Device.GetDeviceDataUpError(self).text)
+                        # ossUploadErrorCount = ossUploadErrorCount + 1  # 网络错误
+                        self.driver.save_screenshot('error' + str(ossUploadErrorCount) + '.png')
+                        while True:
+                            # print("while True:")
+                            Device.GetDeviceDataUpErrorOk(self).click()
+                            time.sleep(timeNumber)
+                            try:
+                                if Device.GetDeviceDataManagementData1Info(self):
+                                    ossUploadErrorCount = ossUploadErrorCount + 1  # 网络错误
+                                    print("GetDeviceDataManagementData1Info")
+                                    Device.GetDeviceDataManagementData1Info(self).click()
+                                    break
+                            except:
+                                print("重新上传")
+                                ossUploadErrorCount = ossUploadErrorCount + 1  # 网络错误
+                                Device.GetDeviceDataManagementData1(self).click()
+                                continue
+                    elif Device.GetDeviceDataUpError(self).text == "文件异常，请联系售后":
+                        print("message is " + Device.GetDeviceDataUpError(self).text)
+                        blueToothErrorCount = blueToothErrorCount + 1
+                        self.driver.save_screenshot('error' + str(blueToothErrorCount) + '.png')
+                        while True:
+                            Device.GetDeviceDataUpErrorOk(self).click()
+                            time.sleep(timeNumber)
+                            try:
+                                if Device.GetDeviceDataManagementData1Info(self):
+                                    blueToothErrorCount = blueToothErrorCount + 1
+                                    Device.GetDeviceDataManagementData1Info(self).click()
+                                    break
+                            except:
+                                print("重新上传")
+                                blueToothErrorCount = blueToothErrorCount + 1
+                                Device.GetDeviceDataManagementData1(self).click()
+                                continue
+                    else:
+                        print("未知错误")
+                        self.driver.save_screenshot('weizhierror.png')
             try:
                 if Data.GetDataMenuInfo(self):
+                    time.sleep(0.5)
+                    uploadCount = uploadCount + 1
                     Data.GetDataMenuInfo(self).click()
                     Data.GetDataMenuToDeleteData(self).click()
                     Data.GetDataDeleteDataOk(self).click()
-                    time.sleep(5)
-                    Tool.SwipeDown(self)
-                    Tool.PressBack(self)
+                    # time.sleep(5)
+                    # Tool.SwipeDown(self)
+                    # Tool.PressBack(self)
                     time.sleep(3)
+                    print("630同步活动统计: 共 " + str(uploadCount) + " 次 " " 蓝牙传输一次成功 : " + str(
+                        uploadCount - blueToothErrorCount - ossUploadErrorCount) + " 次 ""上传至云端服务器失败 : " + str(
+                        ossUploadErrorCount) + " 次 ""蓝牙数据传输失败 : " + str(
+                        blueToothErrorCount) + " 次" " 详情网络错误 : " + str(detailsNetworkErrorCount) + " 次")
                 elif Device.GetDeviceDataNetworkError(self).text:
-                    Device.GetDeviceDataNetworkErrorOk(self).click()
-                    i = i + 1
-                    print("网络错误" + str(i) + "次")
+                    Device.GetDeviceDataNetworkErrorOk(self).click
+                    detailsNetworkErrorCount = detailsNetworkErrorCount + 1
             except:
-                self.driver.save_screenshot('3.png')
                 if Device.GetDeviceDataNetworkError(self):
                     Device.GetDeviceDataNetworkErrorOk(self).click()
-                    i = i + 1
-                    print("网络错误" + str(i) + "次")
+                    detailsNetworkErrorCount = detailsNetworkErrorCount + 1
                 else:
                     pass
-            # try:
-            #     if Data.GetDataMenuInfo(self):
-            #         Data.GetDataMenuInfo(self).click()
-            #         Data.GetDataMenuToDeleteData(self).click()
-            #         Data.GetDataDeleteDataOk(self).click()
-            #         time.sleep(5)
-            #         Tool.SwipeDown(self)
-            #         Tool.PressBack(self)
-            #         time.sleep(3)
-            #     else:
-            #         Device.GetDeviceDataNetworkErrorOk(self).click()
-            # except:
-            #     self.driver.save_screenshot('3.png')
-            #     if Device.GetDeviceDataNetworkError(self):
-            #         Device.GetDeviceDataNetworkErrorOk(self).click()
-            #         i = i+1
-            #         print("网络错误" + str(i) + "次")
-            #     else:
-            #         pass
 
     # @retry(max_n=max_number)
-    def testApp(self):  # TODO 630 620 520 618 50 50s 同步活动稳定性  训练下发**520
+    def testApp(self):  # TODO 630 620 520 618 50 50s 同步活动稳定性 训练下发
         try:
             Tap.GetToHome(self).click()
             time.sleep(5)
@@ -104,7 +128,7 @@ class TestDevice(unittest.TestCase):
                 try:
                     self.DataUpload()
                 except:
-                    self.driver.save_screenshot('0.png')
+                    self.driver.save_screenshot('aload.png')
                     time.sleep(3)
                     # Tool.ReStartApp(self)
                     raise
