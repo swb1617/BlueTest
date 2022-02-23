@@ -180,6 +180,50 @@ class TestDevice(unittest.TestCase):
         except:
             raise
 
+    def testRoute(self):
+        global successNumber,failNumber
+        successNumber = 0
+        failNumber = 0
+        try:
+            Tap.GetToHome(self).click()
+            time.sleep(5)
+            linkState = Menu.GetMenuDeviceConnectionStatus(self).text
+            if linkState:
+                print(linkState)
+                Tap.GetToDevice(self).click()
+                time.sleep(5)
+                Device.GetDeviceThirdInfo(self).click()
+                time.sleep(2)
+                try:
+                    while True:
+                        Route.GetRouteCreateRouteInfo(self).click()
+                        time.sleep(3)
+                        Route.GetRouteCreateRouteStartingPoint(self).click()
+                        time.sleep(1)
+                        Tool.SwipeDown(self)
+                        time.sleep(1)
+                        Route.GetRouteCreateRouteEndingPoint(self).click()
+                        time.sleep(1)
+                        Route.GetRouteCreateRouteSave(self).click()
+                        Route.GetRouteCreateRouteSaveToOk(self).click()
+                        time.sleep(5)
+                        Route.GetRouteDetailsRouteSendToDevices(self).click()
+                        time.sleep(3)
+                        try:
+                            if Tool.GetToast(self, "线路已发送") == "线路已发送":
+                                successNumber = successNumber + 1
+                                print(Tool.GetToast(self, "线路已发送"))
+                        except:
+                            failNumber = failNumber + 1
+                            print("下发失败")
+                except:
+                    self.driver.save_screenshot('trainingError.png')
+                    time.sleep(3)
+                    # Tool.ReStartApp(self)
+                    raise
+        except:
+            raise
+
 
 
 
