@@ -15,6 +15,7 @@ class Tool:
         toast_element = WebDriverWait(self.driver, 5).until(lambda x: x.find_element(by=By.XPATH, value=message))
         print(toast_element.text)
         assert toast_element.text == toast_message
+        return toast_element.text
 
     def PressEnter(self):  # 定义回车键
         self.driver.press_keycode(66)

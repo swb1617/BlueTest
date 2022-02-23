@@ -9,6 +9,8 @@ from element.button import Tap
 from element.elementData import Data
 from element.elementDevice import Device
 from element.elementMenu import Menu
+from element.elementRoute import Route
+from element.elementTraining import Training
 
 
 class TestDevice(unittest.TestCase):
@@ -60,7 +62,7 @@ class TestDevice(unittest.TestCase):
                             try:
                                 if Device.GetDeviceDataManagementData1Info(self):
                                     ossUploadErrorCount = ossUploadErrorCount + 1  # 网络错误
-                                    print("GetDeviceDataManagementData1Info")
+                                    # print("GetDeviceDataManagementData1Info")
                                     Device.GetDeviceDataManagementData1Info(self).click()
                                     break
                             except:
@@ -114,7 +116,7 @@ class TestDevice(unittest.TestCase):
                     pass
 
     # @retry(max_n=max_number)
-    def testApp(self):  # TODO 630 620 520 618 50 50s 同步活动稳定性 训练下发
+    def testUpLoad(self):  # TODO 630 620 520 618 50 50s 同步活动稳定性 训练下发
         try:
             Tap.GetToHome(self).click()
             time.sleep(5)
@@ -134,3 +136,50 @@ class TestDevice(unittest.TestCase):
                     raise
         except:
             raise
+
+    def testTraining(self):
+        stepNumber = 5
+        global successNumber,failNumber
+        successNumber = 0
+        failNumber = 0
+        try:
+            Tap.GetToHome(self).click()
+            time.sleep(5)
+            linkState = Menu.GetMenuDeviceConnectionStatus(self).text
+            if linkState:
+                print(linkState)
+                Tap.GetToDevice(self).click()
+                time.sleep(5)
+                Device.GetDeviceSecondInfo(self).click()
+                time.sleep(2)
+                Training.GetTrainingDiyTrainingTap(self).click()
+                Training.GetTrainingAddTraining(self).click()
+                for i in range(stepNumber):
+                    Training.GetTrainingAddStep(self).click()
+                    Training.GetTrainingAddRepeat(self).click()
+                Training.GetTrainingAddSave(self).click()
+                time.sleep(3)
+                try:
+                    while True:
+                        Training.GetTrainingDetailsDown(self).click()
+                        time.sleep(1)
+                        try:
+                            if Tool.GetToast(self, "下发成功") == "下发成功":
+                                successNumber = successNumber + 1
+                                print(Tool.GetToast(self, "下发成功"))
+                            elif Tool.GetToast(self, "下发失败") == "下发失败":
+                                failNumber = failNumber + 1
+                                print(Tool.GetToast(self, "下发失败"))
+                        except:
+                            pass
+                except:
+                    self.driver.save_screenshot('trainingError.png')
+                    time.sleep(3)
+                    # Tool.ReStartApp(self)
+                    raise
+        except:
+            raise
+
+
+
+
