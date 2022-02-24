@@ -7,5 +7,4 @@ if __name__ == '__main__':
     for i in range(20000):
         a = tool.random_name()
         b = tool.random_ssn()
-        print(a +"  "+ b)
-
+        print(a + "  " + b)

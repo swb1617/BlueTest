@@ -181,7 +181,7 @@ class TestDevice(unittest.TestCase):
             raise
 
     def testRoute(self):
-        global successNumber,failNumber
+        global successNumber, failNumber
         successNumber = 0
         failNumber = 0
         try:
@@ -200,9 +200,10 @@ class TestDevice(unittest.TestCase):
                         time.sleep(3)
                         Route.GetRouteCreateRouteStartingPoint(self).click()
                         time.sleep(1)
-                        Tool.SwipeDown(self)
+                        # Tool.SwipeDown(self)
                         time.sleep(1)
                         Route.GetRouteCreateRouteEndingPoint(self).click()
+                        Tool.SwipeDown(self)
                         time.sleep(1)
                         Route.GetRouteCreateRouteSave(self).click()
                         Route.GetRouteCreateRouteSaveToOk(self).click()
