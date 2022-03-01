@@ -37,5 +37,4 @@ class TestLogin(unittest.TestCase):
         UI.GetDevicesIntelligentNotificationBack(self).click()
 
     def test_1(self):
-        print(1)
-        logging.ERROR(print(1))
+
