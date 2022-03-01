@@ -36,5 +36,56 @@ class TestLogin(unittest.TestCase):
         time.sleep(3)
         UI.GetDevicesIntelligentNotificationBack(self).click()
 
-    def test_1(self):
+    def testRealTimeTracking(self):
+        Tap.GetToDevice(self).click()
+        time.sleep(3)
+        UI.GetDevicesRealTimeTrackingInfo(self).click()
+        time.sleep(2)
+        UI.GetDevicesRealTimeTrackingOpen(self).click()
+        time.sleep(3)
+        UI.GetDevicesRealTimeTrackingClose(self).click()
+        time.sleep(2)
+        UI.GetDevicesRealTimeTrackingBack(self).click()
 
+    def testSensor(self):
+        Tap.GetToDevice(self).click()
+        time.sleep(3)
+        UI.GetDevicesSensorInfo(self).click()
+        time.sleep(3)
+        UI.GetDevicesSensorBack(self).click()
+
+    def testDisplaySettings(self):
+        Tap.GetToDevice(self).click()
+        time.sleep(3)
+        UI.GetDeviceDisplaySettingsInfo(self).click()
+        time.sleep(3)
+        UI.GetDeviceDisplaySettingsBack(self).click()
+
+    def testAutomaticSetting(self):
+        Tap.GetToDevice(self).click()
+        time.sleep(3)
+        UI.GetDevicesAutomaticSettingInfo(self).click()
+        time.sleep(3)
+        UI.GetDevicesAutomaticSettingBack(self).click()
+
+    def testComputerSetting(self):
+        Tap.GetToDevice(self).click()
+        time.sleep(3)
+        UI.GetDevicesComputerSettingInfo(self).click()
+        time.sleep(3)
+        UI.GetDevicesComputerSettingBack(self).click()
+
+    def testPageConfiguration(self):
+        Tap.GetToDevice(self).click()
+        time.sleep(3)
+        UI.GetDevicesPageConfigurationInfo(self).click()
+        time.sleep(2)
+        UI.GetDevicesPageConfigurationEdit(self).click()
+        time.sleep(1)
+        UI.GetDevicesPageConfigurationEditSave(self).click()
+        time.sleep(2)
+        UI.GetDevicesPageConfigurationBack(self).click()
+
+    def test1(self):
+        Tap.GetToDevice(self).click()
+        time.sleep(3)
